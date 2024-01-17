@@ -52,3 +52,11 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+
+#Project Folders
+spr_mini_try_again
+SPR_raw.zip
+burn_dummy
+anat_folder
+run_dir
+temp_dir

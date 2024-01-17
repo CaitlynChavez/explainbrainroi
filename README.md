@@ -12,16 +12,27 @@
 
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
 
-# explainbrainROI
+# Explain Brain ROI
 
-> Add a short description here!
+![Screenshot from 2024-01-17 00-42-03](https://github.com/CaitlynChavez/explainbrainroi/assets/28829765/73bc5678-ab8a-4921-941b-83f55f65cce8)
 
-A longer description of your project goes here...
+## 📝 Project Description
 
+    This project focuses on the analysis and comparison MRI of both schizophrenic and cognitively normal patients.  We focus on the classification as well and the identification of regions of the brain associated with each patient type resulting in an explainable model.
 
-<!-- pyscaffold-notes -->
+    ## Features
 
-## Note
+    - Quantitative analysis and comparison of MRI scans using SHAP.
+    - Preprocessing of images using FSL.
+    - Volume and voxel calucations of cortical and subcortical brain regions.
+    - Parallel processing of data using joblib for folders of images.
+    - Inference using our model on your data.
 
-This project has been set up using PyScaffold 4.5. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+    ## Get Started
+
+    
+
+    ## 📄 License
+
+    This project is licensed under the MIT License - see the LICENSE file for details.
+

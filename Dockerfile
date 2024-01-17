@@ -68,7 +68,9 @@ EXPOSE 8501
 ENV STREAMLIT_SERVER_MAX_MESSAGE_SIZE=500
 
 # Set the PYTHONPATH environment variable
+ENV FSLOUTPUTTYPE=NIFTI_GZ
 ENV PYTHONPATH "${PYTHONPATH}:/app/utils"
+ENV FSLDIR=/usr/local/fsl
 ENV PATH="/usr/local/fsl/bin:${PATH}"
 
 

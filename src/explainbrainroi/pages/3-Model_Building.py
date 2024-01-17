@@ -128,30 +128,42 @@ st.write("Final Columns", cleaned_df[columns])
 
 st.write("## Here you can subset based on age. You can select the age range from the list below.  Some helpful ages are")
 
-cleaned_df["age"]
+# cleaned_df["age"]
 
          
    
 st.markdown("       
          - Minimum age: 16
-         - mean age: 36
+         - mean age: 36"
 )
 
 
-age_value= st.number_input('Insert a number')
-subset_age = st.radio("Choose by:", ("Less than","Greater than or equal to"))
-st.write('Data selected by', age_value, subset_age)
+def subset_data(dataframe, column_name, condition, condition_value):
+    """
+    Subset a pandas DataFrame based on a specified column and condition.
+
+    Parameters:
+        dataframe (pd.DataFrame): The DataFrame to subset.
+        column_name (str): The name of the column to filter.
+        condition (str): The condition to apply ("below," "above," "equalto").
+        condition_value: The value or condition to filter on.
+
+    Returns:
+        pd.DataFrame: The subsetted DataFrame.
+    """
+    if condition == "below/equalto":
+        subset = dataframe[dataframe[column_name] <= condition_value]
+    elif condition == "above":
+        subset = dataframe[dataframe[column_name] > condition_value]
+    else:
+        raise ValueError("Invalid condition. Use 'below' or 'above/equalto'")
+
+    return subset
 
 
-
-
-
-
-
-
-
-
-
+# Example usage to subset data based on different conditions
+above_thirtyfour = subset_data(final, 'age', 'above', 34)
+below_or_equal_thirtyfour = subset_data(final, 'age', 'below/equalto', 34)
 
 
 st.write("### Select other parameters")

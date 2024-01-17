@@ -1,20 +1,15 @@
 import streamlit as st
-from utils.FSL_Processing import (load_images_from_folder, anat_volumes)
 import subprocess
 import os 
 
+# Custom 
+from utils.FSL_Processing import (invwarp, applywarp_cort, applywarp_subcort, apply_warps)
+
 st.sidebar.header("STEP 2: Process the Data")
-
-# if "selected_dataset" not in st.session_state:
-#     st.warning("👈 Please upload or Select Data from __Load Data__")
-#     st.stop()
-
-# # Display the uploaded data
-# st.info(f"Uploaded data: {st.session_state['selected_dataset']}")
 
 st.markdown(
     """
-    ## Step 1: Complete Preprocessing Pipeline
+    ## Complete Preprocessing Pipeline
 
     The images will undergo the following preprocessing steps from FSL: 
     - FSL_anat      - a general pipeline for processing anatomical images
@@ -29,34 +24,62 @@ st.markdown(
 """
 )
 
-st.write("## Select the Preprocessing Method")
+st.write("## Anat Preprocessing Using FSL")
 
-st.write("### This process will take approximately 120 minutes to run per image.  Please be patient.")
+st.markdown(
+    """
+    ### This process will take approximately 120 minutes to run per image.  Please be patient.
+    Note:  You can run this process on multiple images at the same time.  Please see the documentation for more information.
 
-# Display the uploaded data
-# st.info(f"Uploaded data: {st.session_state['selected_dataset']}")
-st.write("## Select the Preporcessing Method")
-st.write("### FSL_anat")
+    - Additionally, you can view which stage in this multipstep process by opening a terminal on your computer and typing "htop" and then pressing enter. This will show you the processes running on your computer.
+    """
+)
+
 
 # st.session_state["loaded_images"] = loaded_images
 disable_button=False
-if st.button("Run Complete Preprocessing Pipeline", disabled=disable_button):
-    st.write(st.session_state["uploaded_image_filepath"])
-    # st.session_state["FSL_anat"] = anat_volumes(st.session_state["uploaded_image_filepath"])
-    # subprocess.run(["fsl_anat", "-i", st.session_state["uploaded_image_filepath"]], capture_output=True)
-    process = subprocess.run(["fsl_anat", "-i", str(st.session_state["uploaded_image_filepath"])], capture_output=True, text=True)
+if st.button("Run FSL_anat", disabled=disable_button):
+
+
+    st.write(["fsl_anat","-i", st.session_state["uploaded_image_filepath"]], capture_output=True)
+    process = subprocess.run(["fsl_anat", "-i", str(st.session_state["uploaded_image_filepath"])], capture_output=True)
+    st.session_state["image_anat_output"] = process
+
     st.write("Output:", process.stdout)
     st.write("Error:", process.stderr)
-    st.write("### Preprocessing Started")
+    st.write("### Preprocessing using FSL_anat Completed")
+    disable_button=True
+
+st.write("### Applying Warps Pipeline Using FSL")
+
+st.write(" This process will take approximately 80 minutes to run per image.  Please be patient.")
+
+disable_button=False
+if st.button("Complete Warping Pipeline", disabled=disable_button):
+    st.write(["fsl_anat","-i", st.session_state["uploaded_image_filepath"]], capture_output=True)
+    process = subprocess.run(["fsl_anat", "-i", str(st.session_state["uploaded_image_filepath"])], capture_output=True)
+
+    # st.write("Output:", process.stdout)
+    # st.write("Error:", process.stderr)
+    st.write("### Preprocessing using FSL_anat Completed")
     disable_button=True
 
 
+st.markdown(
+    """
+    To note, you have collected the following information from the images: volumetric and voxel outputs.  Here will will remove the Voxel outputs and keep the volumetric outputs for our model
+    """
+)
 
-#  To note, you have collected the following information from the images:
- #   volumetric and voxel outputs
 
 
-#you will now need to incorporate the following information into the model:
+# dataframe
+
+
+
+
+
+#ou will now need to incorporate the following information into the model:
     #sex 
     #age 
     # or you can choose not to include these values:
@@ -66,29 +89,6 @@ if st.button("Run Complete Preprocessing Pipeline", disabled=disable_button):
     # age
 
     
-
-
-# st.write("### FSL_anat")
-
-# load_images = st.button("Run FSL_anat") 
-
-# st.write("### This process will take approximately 40 minutes to run per image.  Please be patient.")
-
-# # Display the uploaded data
-# st.info(f"Uploaded data: {st.session_state['selected_dataset']}")
-# st.write("## Select the Preporcessing Method")
-# st.write("### FSL_anat")
-
-# st.session_state["loaded_images"] = loaded_images
-
-# if load_images:
-#     st.session_state["FSL_anat"] = anat_volumes(st.session_state["loaded_images"], )
-#     st.write("### FSL_anat Complete")
-
-
-
-
-
 
 
 

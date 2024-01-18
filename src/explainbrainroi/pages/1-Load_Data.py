@@ -38,47 +38,13 @@ st.session_state["EXAMPLE_IMAGE_DIR"] = EXAMPLE_IMAGE_DIR
 # Selecting the analysis Type - push to other pages based on selection
 st.title("Load Data")
 
-
-
 load_example_data = st.sidebar.checkbox("Load Example Data", value=False, key="load_example_data")
-
-# option = st.selectbox(
-#    "What kind of analysis would you like to perform?",
-#    ("Run inference on your data using our model and view the results -- go to Run Inference (page 4)", 
-#     "Run your own analysis on your data using our tools -- Stay Here (page 2)",
-#     "Run some extra preprocessing on your data -- go to Bonus Preprocessing (page 5)"),
-#    index=None,
-#    placeholder="Select contact method...",
-#    key="selected_analysis_type",
-# )
-# /mnt/md0/cads-phd/explainbrainROI/spr_mini/sub-A00000456_ses-20090101_acq-mprage_run-02_T1w.anat
-# st.write('You selected:', option)
-
-# def save_uploadedfile(uploadedfile):
-#     os.makedirs("temp_dir", exist_ok=True)  # Create 'temp_dir' if it doesn't exist
-#     with open(os.path.join("temp_dir",uploadedfile.name),"wb") as f:
-#         f.write(uploadedfile.getbuffer())
-#     return st.success("Saved File:{} to temp_dir".format(uploadedfile.name))
-
-# def load_images_from_folder(folder_path):
-#     images = []
-#     for filename in os.listdir(folder_path):
-#         if filename.endswith(".nii") or filename.endswith(".nii.gz"): # Check for specific image file extensions
-#             img_path = os.path.join(folder_path, filename)
-#             img = nib.load(img_path)
-#             img_data = img.get_fdata()
-#             st.write(f"Shape of image {filename}: {img_data.shape}")
-#             images.append(img_data)
-#     return np.array(images)
-
 
 # Input for folder name
 if "folder_name" not in st.session_state:
     folder_name = st.text_input("Enter the Folder Name", max_chars=32, key="folder_name", type='default', placeholder='Example. cait-run-1')
 else:
     folder_name = st.text_input("Enter the Folder Name", value=st.session_state["folder_name"], max_chars=32, key="folder_name", type='default', placeholder='Example. cait-run-1')
-
-
 
 def save_uploadedfiles(uploaded_files, folder_name):
     user_dir = os.path.join(BASE_RUN_DIR, folder_name)
@@ -130,7 +96,7 @@ def plot_image_slice(loaded_image,slice_index):
 
 if "loaded_image" in st.session_state:
     st.subheader("Preview of Image Data")
-    slice_index = st.number_input("Pick an slice to visualize", value=50, placeholder="Type a number...")
+    slice_index = st.number_input("Pick an slice to visualize", value=100, placeholder="Type a number...")
 
     plot_image_slice(st.session_state.loaded_image, slice_index)
         

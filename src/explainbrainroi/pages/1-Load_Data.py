@@ -32,9 +32,6 @@ st.session_state["EXAMPLE_IMAGE_DIR"] = EXAMPLE_IMAGE_DIR
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
 # Selecting the analysis Type - push to other pages based on selection
 st.title("Load Data")
 
@@ -99,7 +96,6 @@ if "loaded_image" in st.session_state:
     slice_index = st.number_input("Pick an slice to visualize", value=100, placeholder="Type a number...")
 
     plot_image_slice(st.session_state.loaded_image, slice_index)
-        
 
 
 # def plot_image_slice(loaded_image, slice_index):

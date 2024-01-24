@@ -6,11 +6,25 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
 import shap
 import time
-from utils.FSL_Processing import (load_images_from_folder, anat_volumes)
+# from utils.FSL_Processing import (load_images_from_folder, anat_volumes)
+
+
+# -----------------------------------------------------------------------------------------------------------------------------
+# ENVIRONMENT SETUP
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
 
 st.sidebar.header("STEP 2: Process the Data")
 
@@ -45,7 +59,11 @@ st.markdown(
 
 # st.write("### Select the target variable")
 
-load_images = st.button("Our Model") 
+
+# disable_button=False
+# if st.button("Our Model", disabled=disable_button):
+
+#     # st.write(inference_df[columns].head(25))
 
 
 
@@ -118,7 +136,7 @@ filter = st.radio("Choose by:", ("inclusion","exclusion"))
 if filter == "exclusion":
     columns = [col for col in cleaned_df.columns if col not in columns]
 
-st.write("Resulting Dataset", cleaned_df[columns].head())
+# st.write("Resulting Dataset", cleaned_df[columns].head())
 
 # subset = cleaned_df[columns]
 
@@ -126,16 +144,20 @@ st.write("Resulting Dataset", cleaned_df[columns].head())
 
 st.write("Final Columns", cleaned_df[columns])
 
+# st.write("Hey Cait", cleaned_df[columns].shape)
+st.write("Hey Cait", cleaned_df[columns])
+
+
 st.write("## Here you can subset based on age. You can select the age range from the list below.  Some helpful ages are")
 
 # cleaned_df["age"]
 
          
    
-st.markdown("       
-         - Minimum age: 16
-         - mean age: 36"
-)
+# st.markdown("       
+#          - Minimum age: 16
+#          - mean age: 36"
+# )
 
 
 def subset_data(dataframe, column_name, condition, condition_value):
@@ -162,8 +184,96 @@ def subset_data(dataframe, column_name, condition, condition_value):
 
 
 # Example usage to subset data based on different conditions
-above_thirtyfour = subset_data(final, 'age', 'above', 34)
-below_or_equal_thirtyfour = subset_data(final, 'age', 'below/equalto', 34)
+above_thirtyfour = subset_data(cleaned_df[columns], 'age', 'above', 34)
+# below_or_equal_thirtyfour = subset_data(final, 'age', 'below/equalto', 34)
+
+st.write(above_thirtyfour.shape)
+
+
+# above_thirtyfour
+# below_or_equal_thirtyfour
+
+targets = above_thirtyfour['Target_cat']
+data = above_thirtyfour.drop(columns=['Target', 'Target_cat', 'sex', 'age', 'sex_cat'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def print_accuracy(f):
+    print("Accuracy = {0}%".format(100*np.sum(f(X_test) == y_test)/len(y_test)))
+    time.sleep(0.5) # to let the print get out before any progress bars
+
+
+
+
+#Establish CV scheme
+CV = KFold(n_splits=5, shuffle=True)
+
+ix_training, ix_test = [], []
+# Loop through each fold and append the training & test indices to the empty lists above
+for fold in CV.split(data):
+    ix_training.append(fold[0]), ix_test.append(fold[1])
+
+
+X = data
+y = targets
+
+SHAP_values_per_fold = [] #-#-#
+sum_acc = []
+## Loop through each outer fold and extract SHAP values 
+for i, (train_outer_ix, test_outer_ix) in enumerate(zip(ix_training, ix_test)): #-#-#
+    #Verbose
+    print('\n------ Fold Number:',i)
+    X_train, X_test = X.iloc[train_outer_ix, :], X.iloc[test_outer_ix, :]
+    y_train, y_test = y.iloc[train_outer_ix], y.iloc[test_outer_ix]
+
+    # model = RandomForestClassifier(n_estimators=125, max_depth=90, min_samples_split=5, n_jobs = -1) # Random state for reproducibility (same results every time)
+    model = RandomForestClassifier(n_jobs = -1) # Random state for reproducibility (same results every time)
+    fit = model.fit(X_train, y_train)
+    
+    yhat = fit.predict(X_test)
+    value = print_accuracy(fit.predict)
+    st.write("Accuracy", value)
+    sum_acc.append(value)
+    
+    
+
+    # Use SHAP to explain predictions
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(X_test)
+    for SHAPs in shap_values:
+        SHAP_values_per_fold.append(SHAPs) #-#-#
+        
+# print(np.average(np.array(sum_acc)))
+
+shap.summary_plot(shap_values[1], X_test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 st.write("### Select other parameters")
@@ -195,6 +305,48 @@ with col3:
     st.markdown("##### Max Depth")
     lr = st.number_input("Default = -1")
     st.write("The maximum depth of the tree.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     # col4, col5, col6 = st.columns(3)

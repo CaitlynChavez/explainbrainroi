@@ -165,7 +165,7 @@ if st.button("Building Dataframe ", disabled=disable_button):
     # st.write("Hi cait", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz")
     # st.write("Hi cait2", st.session_state["patient_anat"]+"/T1.nii.gz")
     # out_subcort = sout = subprocess.Popen(["fslstats", "-K", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz", st.session_state["patient_anat"]+"/T1.nii.gz", "-V"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) # CAIT but this one works
-    process = sout = subprocess.Popen(["fslstats", "-K", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz", st.session_state["patient_anat"]+"/T1.nii.gz", "-V"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = sout = subprocess.Popen(["fslstats", "-K", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz", st.session_state["patient_anat"]+"/T1.nii.gz", "-V"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     stdout, subcort_stderr = process.communicate()
     st.session_state["fsl_volumes"] = stdout
     st.write(stdout)
@@ -175,7 +175,8 @@ if st.button("Building Dataframe ", disabled=disable_button):
 
 
     # subcort_output = out_subcort.stdout_subcort.strip()
-    output = process.stdout.strip()
+    # output = process.stdout.strip()
+    output = process.stdout.strip().split()
 
     # Split the output into mean intensity and volume
     mean_intensity, volume_info = subcort_output.split()

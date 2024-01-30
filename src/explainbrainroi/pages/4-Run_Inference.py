@@ -1,8 +1,16 @@
 import streamlit as st
-import os 
 import pandas as pd
-
-
+import os
+import sys
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import sklearn
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
+import shap
+import time
 
 st.markdown(
     """
@@ -42,16 +50,29 @@ Your data should follow the structure below:
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
+# example_path = './app/explainbrainROI/volume_dummy.csv'
+# inference_data = pd.read_csv(example_path)
+# st.session_state["inference_df"] = inference_data
 
-example_path = '/mnt/md0/cads-phd/explainbrainROI/volume_dummy.csv'
-inference_data = pd.read_csv(example_path)
-st.session_state["inference_df"] = inference_data
 
+# uploaded_file = st.file_uploader("Choose a file")
+# if uploaded_file is not None:
+#   inference_df = pd.read_csv(uploaded_file)
+#   st.write(inference_df)
 
-uploaded_file = st.file_uploader("Choose a file")
+uploaded_file = st.file_uploader("Choose Volume Data (CSV)")
 if uploaded_file is not None:
   inference_df = pd.read_csv(uploaded_file)
   st.write(inference_df)
+
+
+# uploaded_file = st.file_uploader("Choose Volume Data (CSV)")
+# if uploaded_file is not None:
+#     # inference_data = pd.read_csv(example_path)
+#     st.session_state["inference_df"] = inference_data
+#     st.write(st.session_state["inference_df"])
+
+
 
 st.session_state["inference_df"] = inference_df
 
@@ -74,30 +95,28 @@ disable_button=False
 if st.button("View Sample of Dataset", disabled=disable_button):
     st.write(inference_df[columns].head(25))
 
+# inference_df[columns]["sex"] = inference_df[columns]["sex"].astype('category')
+# inference_df[columns]['sex_cat'] = inference_df[columns]['sex'].cat.codes
+# inference_df[columns]["Target"] = inference_df[columns]["Target"].astype('category')
+# inference_df[columns]['Target_cat'] = inference_df[columns]['Target'].cat.codes
+
+# targets = inference_df[columns]['Target_cat']
+# data = inference_df[columns].drop(columns=['Target', 'Target_cat', 'sex', 'age', 'sex_cat'])
+
+inference_df[columns].set_index('Patient', inplace=True)
 
 
-targets = inference_df[columns]['Target_cat']
-data = inference_df[columns].drop(columns=['Target', 'Target_cat', 'sex', 'age', 'sex_cat'])
-
+targets = inference_df[columns]['Target']
+data = inference_df[columns].drop(columns=['sex', 'age'])
 
 
 st.write("Targets",targets)
 st.write("Data",data)
 
 
-
-
-
-
-
-
-
-
 def print_accuracy(f):
     print("Accuracy = {0}%".format(100*np.sum(f(X_test) == y_test)/len(y_test)))
     time.sleep(0.5) # to let the print get out before any progress bars
-
-
 
 
 #Establish CV scheme
@@ -140,8 +159,13 @@ for i, (train_outer_ix, test_outer_ix) in enumerate(zip(ix_training, ix_test)): 
         SHAP_values_per_fold.append(SHAPs) #-#-#
         
 # print(np.average(np.array(sum_acc)))
+        
+fig = shap.summary_plot(shap_values[1], X_test)
+st.pyplot(fig)
 
-shap.summary_plot(shap_values[1], X_test)
+
+
+
 
 
 

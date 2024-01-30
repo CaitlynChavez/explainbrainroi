@@ -145,7 +145,7 @@ disable_button=False
 if st.button("Building Dataframe ", disabled=disable_button):
     
     # Cortical FSL Stats Volume Extraction
-    st.session_state["patient_anat"] = st.session_state["root_path"]+".anat"
+    # st.session_state["patient_anat"] = st.session_state["root_path"]+".anat"
     # st.write("Hi cait", st.session_state["patient_anat"]+"/Warps/HO_in_subj_t1_space.nii.gz")
     # st.write("Hi cait2", st.session_state["patient_anat"]+"/T1.nii.gz")
     out_cort = subprocess.Popen(["fslstats", "-K", st.session_state["patient_anat"]+"/Warps/HO_in_subj_t1_space.nii.gz", st.session_state["patient_anat"]+"/T1.nii.gz", "-V"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -161,7 +161,7 @@ if st.button("Building Dataframe ", disabled=disable_button):
 
 
     # Subcortical FSL Stats Volume Extraction
-    # st.session_state["patient_anat"] = st.session_state["root_path"]+".anat"
+    st.session_state["patient_anat"] = st.session_state["root_path"]+".anat"
     # st.write("Hi cait", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz")
     # st.write("Hi cait2", st.session_state["patient_anat"]+"/T1.nii.gz")
     # out_subcort = sout = subprocess.Popen(["fslstats", "-K", st.session_state["patient_anat"]+"/Warps/subcort_HO_in_subj_t1_space.nii.gz", st.session_state["patient_anat"]+"/T1.nii.gz", "-V"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT) # CAIT but this one works
@@ -174,20 +174,20 @@ if st.button("Building Dataframe ", disabled=disable_button):
     st.write("NEW***************************************************************************************")
 
 
-    # subcort_output = out_subcort.stdout_subcort.strip()
-    # output = process.stdout.strip()
-    output = process.stdout.strip().split()
+    # # subcort_output = out_subcort.stdout_subcort.strip()
+    # # output = process.stdout.strip()
+    # output = process.stdout.strip().split()
 
-    # Split the output into mean intensity and volume
-    mean_intensity, volume_info = subcort_output.split()
-    volume_voxels, volume_mm3 = volume_info.split(";")
+    # # Split the output into mean intensity and volume
+    # mean_intensity, volume_info = subcort_output.split()
+    # volume_voxels, volume_mm3 = volume_info.split(";")
 
-    # Create a DataFrame
-    df = pd.DataFrame({
-        "Mean Intensity": [float(mean_intensity)],
-        "Volume (Voxels)": [int(volume_voxels)],
-        "Volume (mm³)": [float(volume_mm3)]
-    })
+    # # Create a DataFrame
+    # df = pd.DataFrame({
+    #     "Mean Intensity": [float(mean_intensity)],
+    #     "Volume (Voxels)": [int(volume_voxels)],
+    #     "Volume (mm³)": [float(volume_mm3)]
+    # })
 
 # st.write(df)
 

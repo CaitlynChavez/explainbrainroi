@@ -10,7 +10,6 @@
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/explainbrainROI)
 -->
 
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
 
 
 # Toward the Trusted Medical Imaging AI: An Explainable Machine Learning Model for Schizophrenia Brain MRIs
@@ -18,6 +17,7 @@ Official repository for ExplainBrainROI Paper
 
 Authors:
 
+[![Docker](https://github.com/CaitlynChavez/explainbrainroi/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/CaitlynChavez/explainbrainroi/actions/workflows/docker-publish.yml)
 
 ![Screenshot from 2024-01-17 00-42-03](https://github.com/CaitlynChavez/explainbrainroi/assets/28829765/73bc5678-ab8a-4921-941b-83f55f65cce8)
 

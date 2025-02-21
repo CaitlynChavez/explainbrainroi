@@ -1,6 +1,7 @@
 # Stage 1: Set up FSL environment
-FROM ubuntu:20.04 as fsl
-
+# FROM ubuntu:20.04 as fsl
+FROM python:3.9-slim-buster
+# FROM  continuumio/anaconda3
 # Set the working directory to /app
 WORKDIR /app
 
@@ -14,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     libopenblas-dev
 
 # Download and install FSL
-RUN wget -O fslinstaller.py https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
-RUN python3 fslinstaller.py -d /usr/local/fsl -V 6.0.6
+RUN wget -O fslinstaller.py https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+RUN python3 fslinstaller.py -d /usr/local/fsl 
 
 # Set the FSLDIR environment variable
 ENV FSLDIR=/usr/local/fsl
@@ -43,7 +44,7 @@ ENV FSLWISH=/usr/bin/wish
 
 
 # Stage 2: Set up Python and the application
-FROM python:3.9-slim-buster
+# FROM python:3.9-slim-buster
 
 # Run APT installs
 RUN apt update 
@@ -55,7 +56,7 @@ RUN apt install -y git ffmpeg libsm6 libxext6 libquadmath0 \
 WORKDIR /app
 
 # Copy the FSL installation from the previous stage
-COPY --from=fsl /usr/local/fsl /usr/local/fsl
+# COPY --from=fsl /usr/local/fsl /usr/local/fsl
 
 # Copy the entire project directory into the container
 COPY . .

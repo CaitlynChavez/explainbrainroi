@@ -1,0 +1,3 @@
+Scaling factor from T1 to MNI (using skull-constrained linear registration) = 0.423033
+Brain volume in mm^3 (native/original space) = 1190054
+Brain volume in mm^3 (normalised to MNI) = 503432.113782

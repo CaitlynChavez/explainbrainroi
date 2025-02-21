@@ -110,66 +110,67 @@ targets = inference_df[columns]['Target']
 data = inference_df[columns].drop(columns=['sex', 'age'])
 
 
-st.write("Targets",targets)
-st.write("Data",data)
 
 
-def print_accuracy(f):
-    print("Accuracy = {0}%".format(100*np.sum(f(X_test) == y_test)/len(y_test)))
-    time.sleep(0.5) # to let the print get out before any progress bars
+########################################################################################
+##  INFERENCE
+########################################################################################  
+# 
+# 
+#   
+st.session_state["best_model"] = best_model
+st.session_state["best_shap_values"] = best_shap_values
+st.session_state["best_explainer"] = best_explainer
+# st.session_state["single_volume"] = volume_df
+single_patient = st.session_state["single_volume"]
 
-
-#Establish CV scheme
-CV = KFold(n_splits=5, shuffle=True)
-
-ix_training, ix_test = [], []
-# Loop through each fold and append the training & test indices to the empty lists above
-for fold in CV.split(data):
-    ix_training.append(fold[0]), ix_test.append(fold[1])
-
-
-
-X = data
-y = targets
-
-SHAP_values_per_fold = [] #-#-#
-sum_acc = []
-## Loop through each outer fold and extract SHAP values 
-for i, (train_outer_ix, test_outer_ix) in enumerate(zip(ix_training, ix_test)): #-#-#
-    #Verbose
-    print('\n------ Fold Number:',i)
-    X_train, X_test = X.iloc[train_outer_ix, :], X.iloc[test_outer_ix, :]
-    y_train, y_test = y.iloc[train_outer_ix], y.iloc[test_outer_ix]
-
-    # model = RandomForestClassifier(n_estimators=125, max_depth=90, min_samples_split=5, n_jobs = -1) # Random state for reproducibility (same results every time)
-    model = RandomForestClassifier(n_jobs = -1) # Random state for reproducibility (same results every time)
-    fit = model.fit(X_train, y_train)
+def compare_dataframe_columns(df1, df2):
+    """
+    Prints the columns that are only in df1, only in df2,
+    and those that appear in both.
+    """
+    df1_cols = set(df1.columns)
+    df2_cols = set(df2.columns)
     
-    yhat = fit.predict(X_test)
-    value = print_accuracy(fit.predict)
-    st.write("Accuracy", value)
-    sum_acc.append(value)
+    only_in_df1 = df1_cols - df2_cols
+    only_in_df2 = df2_cols - df1_cols
+    common = df1_cols & df2_cols
     
-    
-
-    # Use SHAP to explain predictions
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X_test)
-    for SHAPs in shap_values:
-        SHAP_values_per_fold.append(SHAPs) #-#-#
-        
-# print(np.average(np.array(sum_acc)))
-        
-fig = shap.summary_plot(shap_values[1], X_test)
-st.pyplot(fig)
+    return {
+        "only_in_df1": list(only_in_df1),
+        "only_in_df2": list(only_in_df2),
+        "common_columns": list(common)
+    }
+    # print("Columns only in df1:", only_in_df1)
+    # print("Columns only in df2:", only_in_df2)
+    # print("Common columns:", common)
 
 
+result = compare_dataframe_columns(cleaned_df, single_patient)
 
 
+st.write(result)
 
 
 
 
+# # st.session_state["single_volume"] = volume_df
+# single_patient = st.session_state["single_volume"]
+# st.write("Single Patient Shape", single_patient.shape)
+# st.write(single_patient.columns)
+
+# # Let's run inference on new data
+# y_pred_single = best_model.predict(single_patient)
+
+# st.write("Prediction for the single patient:", y_pred_single)
+
+# # 2) SHAP Values (explanations)
+# shap_values_single = best_explainer.shap_values(single_patient)
+
+# fig, ax = plt.subplots()
+# shap_values_single = shap_values_single[:, :, 1]
+# shap.summary_plot(shap_values_single, y_pred_single)
+# st.pyplot(fig)
 
 
 

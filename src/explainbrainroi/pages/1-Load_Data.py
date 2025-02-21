@@ -63,7 +63,7 @@ def load_image(filepath):
 
 # Streamlit UI
 if load_example_data:
-    st.session_state["loaded_images"] = load_image("example_data")
+    st.session_state["loaded_images"] = load_image("./explainbrainROI/example_data/sample_image.nii")
     st.write("Loaded images:", st.session_state["loaded_images"])
 
 
